@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Cashier</title>
+    <style>
+        body {
+            font-family: Arial;
+            background: #f5f0e6;
+            padding: 20px;
+        }
+
+        .order {
+            background: white;
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 10px;
+        }
+
+        button {
+            background: green;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+        }
+    </style>
+</head>
+<body>
+
+<h1>☕ Cashier Panel</h1>
+
+<div id="orders"></div>
+
+<script>
+const API = "http://localhost:5000";
+
+async function loadOrders() {
+    const res = await fetch(API + "/orders");
+    const data = await res.json();
+
+    const container = document.getElementById("orders");
+    container.innerHTML = "";
+
+    data.forEach(order => {
+        container.innerHTML += `
+            <div class="order">
+                <h3>Order #${order.id}</h3>
+                <p>Total: ₱${order.total}</p>
+                <p>Status: ${order.status}</p>
+                <button onclick="complete(${order.id})">Complete</button>
+            </div>
+        `;
+    });
+}
+
+async function complete(id) {
+    await fetch(API + "/complete/" + id, { method: "POST" });
+    loadOrders();
+}
+
+setInterval(loadOrders, 2000); // auto refresh every 2 sec
+loadOrders();
+</script>
+
+</body>
+</html>

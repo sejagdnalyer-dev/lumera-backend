@@ -1,0 +1,23 @@
+<h1>📦 Inventory</h1>
+<div id="products"></div>
+
+<script>
+const API = "http://localhost:5000";
+
+async function loadProducts() {
+    const res = await fetch(API + "/products");
+    const data = await res.json();
+
+    document.getElementById("products").innerHTML = "";
+
+    data.forEach(p => {
+        document.getElementById("products").innerHTML += `
+            <div>
+                ${p.name} - ₱${p.price} (Stock: ${p.stock})
+            </div>
+        `;
+    });
+}
+
+loadProducts();
+</script>
